@@ -13,11 +13,6 @@ const io = require("socket.io")(server, {
 });
 
 const { ExpressPeerServer } = require("peer");
-const peerServer = ExpressPeerServer(server, {
-    debug: true,
-});
-
-app.use("/peerjs", peerServer);
 
 app.get("/", (req, res) => {
     res.redirect(`/${uuidv4()}`);
@@ -36,4 +31,12 @@ io.on("connection", (socket) => {
     });
 });
 
-server.listen(process.env.PORT || 3030);
+var ExpressPeerServer = require('peer').ExpressPeerServer; 
+var peerExpress = require('express'); 
+var peerApp = peerExpress(); 
+var peerServer = require('http').createServer(peerApp); 
+var options = { debug: true }; 
+var peerPort = 3001; peerApp.use('/peerjs', ExpressPeerServer(peerServer, options)); 
+peerServer.listen(peerPort);
+
+server.listen(3030);
